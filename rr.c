@@ -363,7 +363,7 @@ static void rr_client_state_0(struct flow *f, uint32_t events)
                 /* data vs time mode and no more transactons to send */
                 return;
         }
-        if (t->opts->delay && flow_postpone(f))
+        if ((t->opts->delay || t->opts->noburst) && flow_postpone(f))
                 return;
         if (rr_do_send(f, events, rr_fn_send))
                 flow_mod(f, rr_client_state_1, EPOLLIN, true);

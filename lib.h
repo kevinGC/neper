@@ -123,6 +123,7 @@ struct options {
         int request_size;
         int response_size;
         struct percentiles percentiles;
+        int noburst;
 
         /* tcp_crr */
         bool nostats;

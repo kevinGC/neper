@@ -255,7 +255,7 @@ int flow_postpone(struct flow *f)
 
         if (deadline_expired(f)) {
                 /* can serve the flow now, update next deadline */
-                f->f_next_event += t->opts->delay;
+                flow_update_next_event(f, t->opts->delay);
         } else {
                 struct rate_limit *rl = &t->rl;
                 /* flow must be delayed, record in the array, update next
@@ -270,6 +270,12 @@ int flow_postpone(struct flow *f)
         };
         return false;
 }
+
+void flow_update_next_event(struct flow *f, uint64_t duration)
+{
+        f->f_next_event += duration;
+}
+
 
 void flow_delete(struct flow *f)
 {

@@ -120,6 +120,7 @@ struct flags_parser *add_flags_tcp_rr(struct flags_parser *fp)
         /* Define flags specialized to only TCP_RR */
         DEFINE_FLAG(fp, unsigned long, delay,           0,       'D', "Nanosecond delay between each send()/write()");
         DEFINE_FLAG(fp, bool,          async_connect,   false,   0,  "use non blocking connect");
+        DEFINE_FLAG(fp, int,           noburst,         0,       0, "Nanosecond delay between the initial transaction of each flow. Avoids starting with one giant burst of packets");
 
         /* Return the updated fp */
         return (fp);

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <stdint.h>
 #include <time.h>
 
 #include "common.h"
@@ -60,6 +61,29 @@ void *loop(struct thread *t)
                 pthread_cond_wait(t->loop_init_c, t->loop_init_m);
         t->fn->fn_loop_init(t);
         (*t->loop_inited)++;
+
+        /* Support noburst offsets. This has to happen after fn_loop_init, which
+         * creates flows and assigns them a per-thread f_id.
+         */
+        if (opts->noburst) {
+                int i;
+
+                /* The first flow in the thread is offset based on the thread
+                 * index. Subsequent flows are offset by intervals based on the
+                 * number of threads. This ensures threads stagger and
+                 * interleave the first transaction of each flow. For example, 2
+                 * threads running 4 flows will run in the order (t0,f0), (t1,
+                 * f1), (t0, f2), (t1, f3) with the --noburst interval between
+                 * each.
+                 */
+                int thread_offset = opts->noburst * t->index;
+                int gap = opts->noburst * opts->num_threads;
+                for (i = 0; i < t->flow_count; i++) {
+                        uint64_t flow_offset = thread_offset + i * gap;
+                        flow_update_next_event(t->flows[i], flow_offset);
+                }
+        }
+
         pthread_cond_broadcast(t->loop_init_c);
         pthread_mutex_unlock(t->loop_init_m);
 

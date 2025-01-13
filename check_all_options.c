@@ -99,6 +99,10 @@ void check_options_tcp_crr(struct options *opts, struct callbacks *cb)
 
 void check_options_tcp_rr(struct options *opts, struct callbacks *cb)
 {
+        CHECK(cb, opts->noburst >= 0,
+              "noburst interval must be non-negative.");
+        CHECK(cb, !opts->noburst || opts->client,
+              "noburst is only valid for clients, not servers.");
 }
 
 void check_options_tcp_stream(struct options *opts, struct callbacks *cb)

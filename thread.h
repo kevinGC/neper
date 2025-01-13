@@ -59,6 +59,7 @@ struct neper_stats;
 struct rate_limit {
         /* all timestamps are in ns */
         uint64_t start_time;            /* start of the thread */
+        uint64_t offset;                /* offset of start of the first flow */
         uint64_t now;                   /* last gettimeofday */
         uint64_t next_event;            /* time of next pending event */
         uint64_t delay_count;           /* stats: delayed events */
