@@ -17,6 +17,7 @@
 #include <errno.h>
 #include <sched.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <sys/epoll.h>
 #include <sys/eventfd.h>
 
@@ -196,6 +197,12 @@ int64_t thread_next_slot(struct thread *t)
 {
         int64_t ret = t->rl.next_noburst_slot;
         t->rl.next_noburst_slot += t->gap_ns;
+        if (t->opts->noburst_jitter) {
+                /* A jitter of X means we adjust by +/-Xns. */
+                int64_t jitter = (int64_t)rand() % (t->opts->noburst_jitter * 2)
+                                - t->opts->noburst_jitter;
+                ret += jitter;
+        }
         return ret;
 }
 

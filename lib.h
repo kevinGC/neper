@@ -128,6 +128,11 @@ struct options {
          * This effectively imposes a global rate limit.
          */
         unsigned long noburst;
+        /* When set, the maximum nanoseconds added/subtracted to/from noburst to
+         * determinte the next transaction. This adds some random-ish jitter to
+         * better simulate some real-world workloads.
+         */
+        unsigned long noburst_jitter;
 
         /* tcp_crr */
         bool nostats;

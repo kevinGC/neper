@@ -123,6 +123,8 @@ struct flags_parser *add_flags_tcp_rr(struct flags_parser *fp)
         DEFINE_FLAG(fp, bool,          async_connect,      false,   0,  "use non blocking connect");
         DEFINE_FLAG(fp, unsigned long, noburst,         0,       0, "noburst interval in ns (default), us, ms, or s");
         DEFINE_FLAG_PARSER(fp,         noburst, parse_duration);
+        DEFINE_FLAG(fp, unsigned long, noburst_jitter,  0,       0, "noburst jitter in ns (default), us, ms, or s");
+        DEFINE_FLAG_PARSER(fp,         noburst_jitter,  parse_duration);
 
         /* Return the updated fp */
         return (fp);

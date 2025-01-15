@@ -67,8 +67,9 @@ struct rate_limit {
         int pending_count;              /* entries in pending_flows */
         struct flow **pending_flows;    /* size is flow_count */
 
-        /* noburst enforces an interval between transactions. Unlike delay,
-         * which simply delays the next send, noburst rate limits transactions.
+        /* noburst and noburst_jitter enforce an interval between
+         * transactions. Unlike delay, which simply delays the next send,
+         * noburst rate limits transactions.
          *
          * The first flow in each thread is offset based on the thread index.
          * Subsequent flows are offset by intervals based on the number of

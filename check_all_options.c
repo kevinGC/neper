@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include <stdlib.h>
+
 #include "common.h"
 #include "check_all_options.h"
 
@@ -103,6 +105,13 @@ void check_options_tcp_rr(struct options *opts, struct callbacks *cb)
         if (opts->noburst > 0) {
                 CHECK(cb, opts->delay == 0,
                       "noburst cannot be set at the same time as delay");
+                CHECK(cb, opts->noburst >= opts->noburst_jitter,
+                      "noburst jitter must be less than or equal to noburst");
+                CHECK(cb, opts->noburst_jitter <= RAND_MAX,
+                      "nuburst jitter must be <= %d", RAND_MAX);
+        } else {
+                CHECK(cb, opts->noburst_jitter == 0,
+                      "noburst jitter cannot be set without --noburst");
         }
 }
 
